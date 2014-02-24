@@ -1,6 +1,8 @@
-var dgram = require('dgram');
+#!/usr/bin/env node
+
 var http = require('http');
-var static = require('node-static');
+var dgram = require('dgram');
+var express = require('express');
 var sockjs = require('sockjs');
 var commander = require('commander');
 var version = require('./package').version;
@@ -41,11 +43,9 @@ function broadcast(data) {
   }
 }
 
-var file = new static.Server('.');
-var httpServer = http.createServer(function (request, response) {
-  request.addListener('end', function () {
-    file.serveFile('static/index.html', 200, {}, request, response);
-  }).resume();
-});
+var app = express();
+app.use(express.static(__dirname + '/static'));
+
+var httpServer = http.createServer(app);
 ws.installHandlers(httpServer, {prefix: '/stats'});
 httpServer.listen(conf.portOut, '0.0.0.0');
