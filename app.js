@@ -9,13 +9,15 @@ var version = require('./package').version;
 
 commander
   .version(version)
+  .option('-a, --addr     [s]', 'Webapp addr')
   .option('-p, --port-out [n]', 'Webapp port', parseInt)
   .option('-i, --port-in  [n]', 'Stats port', parseInt)
   .parse(process.argv);
 
 conf = {
-  portIn: commander.portIn || 5555,
-  portOut: commander.portOut || 5556
+  addr: commander.addr || '0.0.0.0',
+  portIn: commander.portIn || 7777,
+  portOut: commander.portOut || 7778
 };
 
 console.log('Running with conf', conf);
@@ -48,4 +50,4 @@ app.use(express.static(__dirname + '/static'));
 
 var httpServer = http.createServer(app);
 ws.installHandlers(httpServer, {prefix: '/stats'});
-httpServer.listen(conf.portOut, '0.0.0.0');
+httpServer.listen(conf.portOut, conf.addr);
