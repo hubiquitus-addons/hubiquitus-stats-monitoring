@@ -40,8 +40,8 @@
         </div>
     </div>
 
-    <div data-ng-repeat="(id, rates) in stats">
-        <h4 class="text-info"><span class="glyphicon glyphicon-chevron-right"></span> {{ id }}</h4>
+    <div data-ng-repeat="(id, info) in stats">
+        <h4 class="text-info"><span class="glyphicon glyphicon-chevron-right"></span> {{ info.name }} - {{ id }}</h4>
         <table class="table table-striped table-hover">
             <thead>
             <tr>
@@ -51,7 +51,7 @@
             </tr>
             </thead>
             <tbody data-ng-cloak>
-            <tr data-ng-repeat="rate in rates">
+            <tr data-ng-repeat="rate in info.rates">
                 <td>{{ rate.from }}</td>
                 <td>{{ rate.to }}</td>
                 <td class="text-center"><span class="label label-primary">{{ rate.rate }}</span></td>
@@ -95,7 +95,10 @@
                 return rate.from === 'global' ? '' : rate.key;
             });
             $scope.$apply(function () {
-                $scope.stats[data.id] = rates;
+                $scope.stats[data.id] = {
+                  name: data.name,
+                  rates: rates
+                };
             })
         };
 
